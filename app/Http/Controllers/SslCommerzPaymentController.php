@@ -22,17 +22,39 @@ class SslCommerzPaymentController extends Controller
 
     public function index(Request $request)
     {
+
+        $user = \App\Models\Student::find(session()->get('user_id'))->first();
+        $u_id = $user->id;
+        $name = $user->studentName;
+        $studentID = $user->studentID;
+        $studentPhone = $user->studentPhone;
+        $department = $user->department;
+        $level = $user->currentLevel;
+        $semester = $user->currentSemester;
+        $semesterFees = DB::select('select * from semester_fees where semester_fees.department=? AND semester_fees.level=? AND semester_fees.semester=?',[$department,$level,$semester]);
+        //$semesterFees = DB::select('select * from semester_fees where department=?',[$student->department]);
+        foreach($semesterFees as $semesterFee)
+        {
+            $semesterFeeAmount = $semesterFee->totalSemesterFee;
+        }
+
+        $facultyFee = 100;
+        if($semester == "i") $hallFee = 10000;
+        else $hallFee = 10;
+        $totalPayable = $semesterFeeAmount + $facultyFee + $hallFee;
+
         # Here you have to receive all the order data to initate the payment.
         # Let's say, your oder transaction informations are saving in a table called "orders"
         # In "orders" table, order unique identity is "transaction_id". "status" field contain status of the transaction, "amount" is the order amount to be paid and "currency" is for storing Site Currency which will be checked with paid currency.
 
         $post_data = array();
-        $post_data['total_amount'] = '10'; # You cant not pay less than 10
+        $post_data['total_amount'] = $totalPayable; # You cant not pay less than 10
         $post_data['currency'] = "BDT";
         $post_data['tran_id'] = uniqid(); // tran_id must be unique
 
         # CUSTOMER INFORMATION
-        $post_data['cus_name'] = 'Customer Name';
+        $post_data['cus_id'] = $studentID;
+        $post_data['cus_name'] = $name;
         $post_data['cus_email'] = 'customer@mail.com';
         $post_data['cus_add1'] = 'Customer Address';
         $post_data['cus_add2'] = "";
@@ -40,7 +62,7 @@ class SslCommerzPaymentController extends Controller
         $post_data['cus_state'] = "";
         $post_data['cus_postcode'] = "";
         $post_data['cus_country'] = "Bangladesh";
-        $post_data['cus_phone'] = '8801XXXXXXXXX';
+        $post_data['cus_phone'] = $studentPhone;
         $post_data['cus_fax'] = "";
 
         # SHIPMENT INFORMATION
@@ -68,6 +90,7 @@ class SslCommerzPaymentController extends Controller
         $update_product = DB::table('orders')
             ->where('transaction_id', $post_data['tran_id'])
             ->updateOrInsert([
+                'studentID'=> $post_data['cus_id'],
                 'name' => $post_data['cus_name'],
                 'email' => $post_data['cus_email'],
                 'phone' => $post_data['cus_phone'],

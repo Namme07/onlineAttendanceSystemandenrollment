@@ -19,11 +19,14 @@ $semesterFees = DB::select('select * from semester_fees where semester_fees.depa
 
 @foreach($semesterFees as $semesterFee)
     <?php
-$semesterFee = $semesterFee->totalSemesterFee
+$semesterFeeAmount = $semesterFee->totalSemesterFee
     ?>
-Semester fee is {{ $semesterFee->totalSemesterFee }}
+Semester fee is {{ $semesterFeeAmount }}
 
 @endforeach
+
+
+<a href="{{ route('gotoPaymentPage') }}">Go to Payment Page</a><br>
 
 
 </body>

@@ -29,6 +29,34 @@
     </style>
 </head>
 <body class="bg-light">
+
+<?php
+$user = \App\Models\Student::find(session()->get('user_id'))->first();
+$u_id = $user->id;
+$name = $user->studentName;
+$studentID = $user->studentID;
+$studentPhone = $user->studentPhone;
+$department = $user->department;
+$level = $user->currentLevel;
+$semester = $user->currentSemester;
+$semesterFees = DB::select('select * from semester_fees where semester_fees.department=? AND semester_fees.level=? AND semester_fees.semester=?',[$department,$level,$semester]);
+//$semesterFees = DB::select('select * from semester_fees where department=?',[$student->department]);
+$facultyFee = 100;
+if($semester == "i") $hallFee = 10000;
+else $hallFee = 10;
+
+?>
+
+@foreach($semesterFees as $semesterFee)
+    <?php
+$semesterFeeAmount = $semesterFee->totalSemesterFee
+    ?>
+<!-- Name : {{ $name }}    <br>
+Semester fee is {{ $semesterFeeAmount }} -->
+
+@endforeach
+
+
 <div class="container">
     <div class="py-5 text-center">
         <h2>Hosted Payment - SSLCommerz</h2>
@@ -44,40 +72,51 @@
             <ul class="list-group mb-3">
                 <li class="list-group-item d-flex justify-content-between lh-condensed">
                     <div>
-                        <h6 class="my-0">Product name</h6>
-                        <small class="text-muted">Brief description</small>
+                        <h6 class="my-0">Semester Fee Total</h6>
+                        <small class="text-muted">Total of all fees in a semester</small>
                     </div>
-                    <span class="text-muted">1000</span>
+                    <span class="text-muted">{{$semesterFeeAmount}}</span>
                 </li>
                 <li class="list-group-item d-flex justify-content-between lh-condensed">
                     <div>
-                        <h6 class="my-0">Second product</h6>
-                        <small class="text-muted">Brief description</small>
+                        <h6 class="my-0">Faculty Fee</h6>
+                        <small class="text-muted">This amount is faculty fee</small>
                     </div>
-                    <span class="text-muted">50</span>
+                    <span class="text-muted">{{$facultyFee}}</span>
                 </li>
                 <li class="list-group-item d-flex justify-content-between lh-condensed">
                     <div>
-                        <h6 class="my-0">Third item</h6>
+                        <h6 class="my-0">Hall Fee</h6>
                         <small class="text-muted">Brief description</small>
                     </div>
-                    <span class="text-muted">150</span>
+                    <span class="text-muted">{{$hallFee}}</span>
                 </li>
                 <li class="list-group-item d-flex justify-content-between">
                     <span>Total (BDT)</span>
-                    <strong>1200 TK</strong>
+                    <strong>{{$semesterFeeAmount + $facultyFee + $hallFee}}</strong>
                 </li>
             </ul>
         </div>
         <div class="col-md-8 order-md-1">
-            <h4 class="mb-3">Billing address</h4>
+            <h4 class="mb-3">Billing details</h4>
             <form action="{{ url('/pay') }}" method="POST" class="needs-validation">
                 <input type="hidden" value="{{ csrf_token() }}" name="_token" />
                 <div class="row">
                     <div class="col-md-12 mb-3">
-                        <label for="firstName">Full name</label>
+                        <label for="firstName">Student ID</label>
                         <input type="text" name="customer_name" class="form-control" id="customer_name" placeholder=""
-                               value="John Doe" required>
+                               value={{$studentID}} disabled>
+                        <div class="invalid-feedback">
+                            Valid customer name is required.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12 mb-3">
+                        <label for="firstName">Full Name</label>
+                        <input type="text" name="customer_name" class="form-control" id="customer_name" placeholder=""
+                               value={{$name}} disabled>
                         <div class="invalid-feedback">
                             Valid customer name is required.
                         </div>
@@ -91,14 +130,14 @@
                             <span class="input-group-text">+88</span>
                         </div>
                         <input type="text" name="customer_mobile" class="form-control" id="mobile" placeholder="Mobile"
-                               value="01711xxxxxx" required>
+                               value={{$studentPhone}} disabled>
                         <div class="invalid-feedback" style="width: 100%;">
                             Your Mobile number is required.
                         </div>
                     </div>
                 </div>
 
-                <div class="mb-3">
+                <!-- <div class="mb-3">
                     <label for="email">Email <span class="text-muted">(Optional)</span></label>
                     <input type="email" name="customer_email" class="form-control" id="email"
                            placeholder="you@example.com" value="you@example.com" required>
@@ -160,7 +199,7 @@
                 <div class="custom-control custom-checkbox">
                     <input type="checkbox" class="custom-control-input" id="save-info">
                     <label class="custom-control-label" for="save-info">Save this information for next time</label>
-                </div>
+                </div> -->
                 <hr class="mb-4">
                 <button class="btn btn-primary btn-lg btn-block" type="submit">Continue to checkout (Hosted)</button>
             </form>

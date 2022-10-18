@@ -25,6 +25,7 @@ Route::post('/addstudent',[\App\Http\Controllers\StudentController::class,'addNe
 Route::get('/stuLoginPage',[\App\Http\Controllers\StudentController::class,'gotoLoginPage'])->name('stuLoginPage');
 Route::get('/studentHomePage',[\App\Http\Controllers\HomeController::class,'gotoStudentHomePage'])->name('studentHomePage');
 Route::post('/loginstudent',[\App\Http\Controllers\StudentController::class,'loginStudent'])->name('loginStudent');
+Route::get('/gotoPaymentPage',[\App\Http\Controllers\StudentController::class,'gotoPaymentPage'])->name('gotoPaymentPage');
 
 Route::post('/addadmin',[\App\Http\Controllers\AdminController::class,'addNewAdmin'])->name('addNewadmin');
 Route::get('/adminLoginPage',[\App\Http\Controllers\AdminController::class,'gotoLoginPage'])->name('adminLoginPage');
@@ -37,6 +38,10 @@ Route::post('/addSemesterFee',[\App\Http\Controllers\SemesterFeeController::clas
 
 Route::get('/addHallFeePage',[\App\Http\Controllers\HallFeeController::class,'gotoHallFeePage'])->name('addHallFeePage');
 Route::post('/addHallFee',[\App\Http\Controllers\HallFeeController::class,'addHallFee'])->name('addHallFee');
+
+
+
+
 
 
 // SSLCOMMERZ Start
@@ -52,3 +57,5 @@ Route::post('/cancel', [\App\Http\Controllers\SslCommerzPaymentController::class
 
 Route::post('/ipn', [\App\Http\Controllers\SslCommerzPaymentController::class, 'ipn']);
 //SSLCOMMERZ END
+
+

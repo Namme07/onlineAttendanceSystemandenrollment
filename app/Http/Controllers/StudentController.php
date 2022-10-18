@@ -17,6 +17,7 @@ class StudentController extends Controller
     {
         return view('studentLogin');
     }
+
     public function addNewStudent(StudentAddRequest $request){
         Student::create($request->all());
         $toMail = $request->studentEmail;
@@ -85,6 +86,11 @@ class StudentController extends Controller
         if($student->usertype == 'travel agency'){
             return redirect()->route('travelagencyhome');
         }*/
+    }
+
+    public function gotoPaymentPage()
+    {
+        return view('exampleHosted');
     }
 
 }
