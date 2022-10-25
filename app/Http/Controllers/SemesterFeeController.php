@@ -15,7 +15,10 @@ class SemesterFeeController extends Controller
     }
 
     public function addSemesterFee(SemesterFeeAddRequest $request){
-        SemesterFee::create($request->all());
+
+        $checkSemFee = \App\Models\SemesterFee::where('department', $request->department)
+        ->where('level', $request->level)
+        ->where('semester', $request->semester)->first();
 
         //calculating fees
         $totalCreditHour = $request->totalCreditHour;
@@ -24,20 +27,50 @@ class SemesterFeeController extends Controller
         $otherFee = $request->otherFees;
         $totalFee = $otherFee + $creditFee;
 
-        //updating model
-        $semFee = SemesterFee::where('department', $request->department)
+
+        if($checkSemFee == null)
+        {
+            SemesterFee::create($request->all());
+
+            //updating model
+            $semFee = SemesterFee::where('department', $request->department)
+                ->where('level', $request->level)
+                ->where('semester', $request->semester)->first();
+            $semFee->totalCreditFee = $creditFee;
+            $semFee->totalSemesterFee = $totalFee;
+
+            //updating database table
+            DB::table('semester_fees')
+                ->where('department', $request->department)
+                ->where('level', $request->level)
+                ->where('semester', $request->semester)
+                ->update(['totalCreditFee' => $creditFee, 'totalSemesterFee' => $totalFee]);
+        }
+
+        else
+        {
+            //updating model
+            $semFee = SemesterFee::where('department', $request->department)
             ->where('level', $request->level)
             ->where('semester', $request->semester)->first();
-        $semFee->totalCreditFee = $creditFee;
-        $semFee->totalSemesterFee = $totalFee;
 
-        //updating database table
-        DB::table('semester_fees')
-            ->where('department', $request->department)
-            ->where('level', $request->level)
-            ->where('semester', $request->semester)
-            ->update(['totalCreditFee' => $creditFee, 'totalSemesterFee' => $totalFee]);
+            $semFee->totalCreditHour = $totalCreditHour;
+            $semFee->creditHourFee = $creditHourFee;
+            $semFee->totalCreditFee = $creditFee;
+            $semFee->creditHourFee = $creditHourFee;
+            $semFee->otherFees = $otherFee;
+            $semFee->totalSemesterFee = $totalFee;
 
-        return redirect()->back()->with('msg','Data add Successfully');
+            //updating database table
+            DB::table('semester_fees')
+                ->where('department', $request->department)
+                ->where('level', $request->level)
+                ->where('semester', $request->semester)
+                ->update(['totalCreditHour' => $totalCreditHour, 'creditHourFee' => $creditHourFee, 'totalCreditFee' => $creditFee, 'otherFees' => $otherFee, 'totalSemesterFee' => $totalFee]);
+        }
+
+
+        return redirect()->back()->with('success','Data Added Successfully');
+        /*return redirect()->back()->with('msg','Data add Successfully');*/
     }
 }

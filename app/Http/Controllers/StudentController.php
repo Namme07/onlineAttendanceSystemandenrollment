@@ -50,7 +50,7 @@ class StudentController extends Controller
 
 
         /*->update(['userType' => 'student', 'password'=>Hash::make($str2)]);*/
-        return redirect()->back()->with('msg','Data add Successfully');
+        return redirect()->back()->with('success','Data Added Successfully');
     }
 
     public function loginStudent(StudentLoginRequest $request){
