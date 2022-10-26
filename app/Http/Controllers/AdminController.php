@@ -33,11 +33,11 @@ class AdminController extends Controller
         $admin = \App\Models\Admin::where('phoneNumber', $request->get('phoneNumber'))->first();
 
         if ($admin == null) {
-            return redirect()->back();
+            return redirect()->back()->with('error','Phone number not valid');
         }
 
         if (($request->get('password') != $admin->password)) {
-            return redirect()->back();
+            return redirect()->back()->with('error','Wrong Password');
         }
 
         else{

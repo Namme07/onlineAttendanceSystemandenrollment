@@ -32,7 +32,7 @@
 
                 <form class="p-3 w-50" action="{{ route('loginAdmin') }}" method="post">
                     @csrf
-                    <div class="form-text">
+                    {{--<div class="form-text">
                         @if($errors->any())
                             <div class="alert alert-danger">
                                 <ul>
@@ -42,12 +42,22 @@
                                 </ul>
                             </div>
                         @endif
-                    </div>
+                    </div>--}}
 
                     <span class="login100-form-title">
                                 Admin Login
                             </span>
+                    @if(\Illuminate\Support\Facades\Session::has('error'))
+                        <div class="alert alert-danger">
+                            {{ \Illuminate\Support\Facades\Session::get('error') }}
+                        </div>
+                    @endif
 
+                    @if(\Illuminate\Support\Facades\Session::has('success'))
+                        <div class="alert alert-success">
+                            {{ \Illuminate\Support\Facades\Session::get('success') }}
+                        </div>
+                    @endif
                     <div class="wrap-input100 validate-input" data-validate = "Phone number is required">
                         <input class="input100" type="number" name="phoneNumber" placeholder="Phone Number" required>
                         <span class="focus-input100"></span>

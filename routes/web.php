@@ -39,7 +39,7 @@ Route::post('/addSemesterFee',[\App\Http\Controllers\SemesterFeeController::clas
 Route::get('/addHallFeePage',[\App\Http\Controllers\HallFeeController::class,'gotoHallFeePage'])->name('addHallFeePage');
 Route::post('/addHallFee',[\App\Http\Controllers\HallFeeController::class,'addHallFee'])->name('addHallFee');
 
-
+Route::get('/admitCardDownload',[\App\Http\Controllers\StudentController::class, 'admitCardDownload'])->name('admitCardDownload');
 
 
 

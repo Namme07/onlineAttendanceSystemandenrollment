@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class StudentController extends Controller
 {
@@ -57,11 +58,11 @@ class StudentController extends Controller
         $student = \App\Models\Student::where('studentPhone',$request->get('phoneNumber'))->first();
 
         if($student == null){
-            return redirect()->back();
+            return redirect()->back()->with('error','Phone number not valid');
         }
 
         if (!Hash::check($request->get('password'), $student->password)){
-            return redirect()->back();
+            return redirect()->back()->with('error','Wrong Password');
         }
 
         /*if ($request->get('password') != $student->password){
@@ -93,4 +94,12 @@ class StudentController extends Controller
         return view('exampleHosted');
     }
 
+
+    public function admitCardDownload()
+    {
+        $pdf = Pdf::loadView('admitCardPage');
+        return $pdf->download('admitCard.pdf');
+
+       /* return view('admitCardPage');*/
+    }
 }

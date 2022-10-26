@@ -95,6 +95,8 @@
                                     </div>
                                     <br>
                                     <a href="{{ route('gotoPaymentPage') }}" class="btn btn-primary">Go to Payment Page</a>
+                                    <br> <br>
+                                    <a href="{{ route('admitCardDownload') }}" class="btn btn-primary">Admit Card Download</a>
                                     <br>
                                 </div>
                                 <div class="col-lg-8">
@@ -178,9 +180,6 @@
                 </div>
             </div>
         </section>
-
-
-
     <!-- Analytics -->
     </body>
 </html>

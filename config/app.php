@@ -186,6 +186,8 @@ return [
          * Package Service Providers...
          */
 
+        \Barryvdh\DomPDF\ServiceProvider::class,
+
         /*
          * Application Service Providers...
          */
